@@ -71,8 +71,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	from := opts.From
-	to := opts.To
+	from, to := commitRange(opts.From, opts.To)
+	if from == "" && to == "" {
+		outputResults(pkgs)
+		return
+	}
+
 	mf, err := repo.ModifiedFiles(from, to)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "could not determine modified files:", err)
@@ -128,9 +132,13 @@ func main() {
 		}
 	}
 
-	sort.Strings(nr)
+	outputResults(pkgs)
+}
 
-	for _, p := range nr {
+func outputResults(pkgs []string) {
+	sort.Strings(pkgs)
+
+	for _, p := range pkgs {
 		fmt.Println(p)
 	}
 }

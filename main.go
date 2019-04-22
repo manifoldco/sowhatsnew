@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -122,12 +123,17 @@ func main() {
 
 	nr := make([]string, 0, len(needsRebuild))
 	for p := range needsRebuild {
+		prefix := regexp.MustCompile("^" + cfg.Package)
 		if strings.HasPrefix(p.Dir, cwd) {
-			nr = append(nr, p.Name)
+			name := p.Name
+			if cfg.Package != "" {
+				name = prefix.ReplaceAllString(p.Name, ".")
+			}
+			nr = append(nr, name)
 		}
 	}
 
-	sort.Strings(pkgs)
+	sort.Strings(nr)
 
 	for _, p := range nr {
 		fmt.Println(p)

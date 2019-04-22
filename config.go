@@ -3,7 +3,8 @@ package main
 import "github.com/hashicorp/hcl"
 
 type Config struct {
-	Deps map[string]string
+	Package string
+	Deps    map[string]string
 }
 
 func NewConfig(raw string) (*Config, error) {

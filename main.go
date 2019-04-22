@@ -125,20 +125,20 @@ func main() {
 		}
 	})
 
-	outputResults(pkgs)
-}
-
-func outputResults(pkgs []string) {
-	nr := make([]string, 0, len(pkgs))
-	for p := range pkgs {
+	nr := make([]string, 0, len(needsRebuild))
+	for p := range needsRebuild {
 		if strings.HasPrefix(p.Dir, cwd) {
 			nr = append(nr, p.Name)
 		}
 	}
 
-	sort.Strings(nr)
+	outputResults(pkgs)
+}
 
-	for _, p := range nr {
+func outputResults(pkgs []string) {
+	sort.Strings(pkgs)
+
+	for _, p := range pkgs {
 		fmt.Println(p)
 	}
 }

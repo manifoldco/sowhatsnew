@@ -29,7 +29,12 @@ func (GitRepository) Detect() (bool, error) {
 // ModifiedFiles returns the list of modified files for the provided commit
 // range, lexicographically sorted, and unique.
 func (GitRepository) ModifiedFiles(from, to string) ([]string, error) {
-	cmd := exec.Command("git", "--no-pager", "diff", "--name-only", from, to)
+	args := []string{"--no-pager", "diff", "--name-only", from, to}
+	if from == "" && to == "" {
+		args = []string{"ls-files"}
+	}
+
+	cmd := exec.Command("git", args...)
 	cmdReader, err := cmd.StdoutPipe()
 	if err != nil {
 		return nil, errors.Wrap(err, "could not read modified files")
